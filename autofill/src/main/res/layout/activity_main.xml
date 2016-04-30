@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context="com.test.autofill.MainActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/percent"
+        android:textSize="80sp"
+        android:gravity="center"
+        android:textColor="#000000"
+        android:layout_weight="1"
+        android:text="percent" />
+
+    <EditText
+        android:id="@+id/editText"
+        android:gravity="center"
+        android:inputType="number"
+        android:maxLength="2"
+
+        android:hint="请输入0至99"
+        android:textSize="40sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="60sp">
+        <RadioButton
+            android:layout_weight="1"
+            android:text="内部存储"
+            android:textSize="30sp"
+            android:id="@+id/internal"
+            android:gravity="center|center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <RadioButton
+            android:layout_weight="1"
+            android:text="SD卡"
+            android:id="@+id/external"
+            android:gravity="center|center_vertical"
+            android:textSize="30sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RadioGroup>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/clear"
+            android:layout_weight="1"
+            android:textSize="40sp"
+            android:text="clear"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/fill"
+            android:layout_weight="1"
+            android:textSize="40sp"
+            android:text="fill"/>
+    </LinearLayout>
+
+</LinearLayout>
