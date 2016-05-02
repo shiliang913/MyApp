@@ -13,6 +13,7 @@
             <option value="$PROJECT_DIR$/autoreboot" />
             <option value="$PROJECT_DIR$/batterymonitor" />
             <option value="$PROJECT_DIR$/demo" />
+            <option value="$PROJECT_DIR$/filldata" />
             <option value="$PROJECT_DIR$/uiautomator" />
           </set>
         </option>
@@ -23,6 +24,7 @@
             <option value="$PROJECT_DIR$/autoreboot" />
             <option value="$PROJECT_DIR$/batterymonitor" />
             <option value="$PROJECT_DIR$/demo" />
+            <option value="$PROJECT_DIR$/filldata" />
             <option value="$PROJECT_DIR$/uiautomator" />
           </set>
         </option>
