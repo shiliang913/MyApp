@@ -29,7 +29,6 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    //http://1028826685.iteye.com/blog/1666645
     TextView tvProgress;
     EditText etInput;
     Button btnContact, btnSMS, btnCall, btnCalendar;
@@ -126,13 +125,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         timer = System.currentTimeMillis();
         for (; count <= num; count++) {
             contentValues.clear();
-            contentValues.put(CalendarContract.CalendarAlerts.TITLE, "calendar title" + count);
-            contentValues.put(CalendarContract.CalendarAlerts.DESCRIPTION, "calendar description" + count);
+            contentValues.put(CalendarContract.Events.TITLE, "calendar title" + count);
+            contentValues.put(CalendarContract.Events.DESCRIPTION, "calendar description" + count);
+            contentValues.put(CalendarContract.Events.EVENT_TIMEZONE, "GMT+8");
+            contentValues.put(CalendarContract.Events.DTSTART, System.currentTimeMillis()+count*60000);
+            contentValues.put(CalendarContract.Events.DTEND, System.currentTimeMillis()+(count+1)*60000);
+            contentValues.put(CalendarContract.Events.CALENDAR_ID, 1);
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
-            contentResolver.insert(CalendarContract.CalendarAlerts.CONTENT_URI, contentValues);
-            if(count%3 == 0) {
+            contentResolver.insert(CalendarContract.Events.CONTENT_URI, contentValues);
+            if(count%10 == 0) {
                 savedTimes = count;
                 handler.sendEmptyMessage(CURRENT_TIMES);
             }
@@ -155,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALL_LOG) != PackageManager.PERMISSION_GRANTED)
                 return;
             contentResolver.insert(CallLog.Calls.CONTENT_URI, contentValues);
-            if(count%10 == 0) {
+            if(count%5 == 0) {
                 savedTimes = count;
                 handler.sendEmptyMessage(CURRENT_TIMES);
             }
@@ -196,13 +199,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             contentValues.clear();
             uri = contentResolver.insert(ContactsContract.RawContacts.CONTENT_URI, contentValues);
             id = ContentUris.parseId(uri);
-            //插入姓名
             contentValues.clear();
             contentValues.put(ContactsContract.Data.RAW_CONTACT_ID, id);
             contentValues.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE);
             contentValues.put(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, "testcontact" + count);
             contentResolver.insert(ContactsContract.Data.CONTENT_URI, contentValues);
-            //插入电话
             contentValues.clear();
             contentValues.put(ContactsContract.Data.RAW_CONTACT_ID, id);
             contentValues.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
