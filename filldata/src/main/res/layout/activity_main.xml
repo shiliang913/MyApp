@@ -41,5 +41,10 @@
         android:layout_height="wrap_content"
         android:text="填充通话记录"
         android:id="@+id/btnCall"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="填充日历事件"
+        android:id="@+id/btnCalendar"/>
 
 </LinearLayout>

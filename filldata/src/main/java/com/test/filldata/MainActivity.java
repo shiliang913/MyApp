@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.CalendarContract;
 import android.provider.CallLog;
 import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
@@ -28,9 +29,10 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    //http://1028826685.iteye.com/blog/1666645
     TextView tvProgress;
     EditText etInput;
-    Button btnContact, btnSMS, btnCall;
+    Button btnContact, btnSMS, btnCall, btnCalendar;
     int count = 1, times = 0, savedTimes;
     long timer;
     final String TAG = "debug";
@@ -42,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     final int FILL_CONTACTS_COMPLETED = 2;
     final int FILL_SMS_COMPLETED = 3;
     final int FILL_CALL_COMPLETED = 4;
+    final int FILL_CALENDAR_COMPLETED = 5;
     Handler handler;
 
     @Override
@@ -54,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnContact = (Button) findViewById(R.id.btnContact);
         btnSMS = (Button) findViewById(R.id.btnSMS);
         btnCall = (Button) findViewById(R.id.btnCall);
+        btnCalendar = (Button) findViewById(R.id.btnCalendar);
         contentResolver = getContentResolver();
         inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         handler = new Handler() {
@@ -64,13 +68,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         tvProgress.setText(savedTimes + "");
                         break;
                     case FILL_CONTACTS_COMPLETED:
-                        tvProgress.setText("Fill Contacts\n\nCompleted");
+                        tvProgress.setText("Fill Contacts\nCompleted");
                         break;
                     case FILL_SMS_COMPLETED:
-                        tvProgress.setText("Fill SMS\n\nCompleted");
+                        tvProgress.setText("Fill SMS\nCompleted");
                         break;
                     case FILL_CALL_COMPLETED:
-                        tvProgress.setText("Fill Call Logs\n\nCompleted");
+                        tvProgress.setText("Fill Call Logs\nCompleted");
+                        break;
+                    case FILL_CALENDAR_COMPLETED:
+                        tvProgress.setText("Fill Calendar Events\nCompleted");
                         break;
                 }
             }
@@ -79,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnContact.setOnClickListener(this);
         btnSMS.setOnClickListener(this);
         btnCall.setOnClickListener(this);
+        btnCalendar.setOnClickListener(this);
         Log.e(TAG, "初始化完成");
 
     }
@@ -106,11 +114,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     case R.id.btnCall:
                         fillCall(times);
                         break;
+                    case R.id.btnCalendar:
+                        fillCalendar(times);
+                        break;
                 }
             }
         }.start();
     }
 
+    public void fillCalendar(int num) {
+        timer = System.currentTimeMillis();
+        for (; count <= num; count++) {
+            contentValues.clear();
+            contentValues.put(CalendarContract.CalendarAlerts.TITLE, "calendar title" + count);
+            contentValues.put(CalendarContract.CalendarAlerts.DESCRIPTION, "calendar description" + count);
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            contentResolver.insert(CalendarContract.CalendarAlerts.CONTENT_URI, contentValues);
+            if(count%3 == 0) {
+                savedTimes = count;
+                handler.sendEmptyMessage(CURRENT_TIMES);
+            }
+        }
+        handler.sendEmptyMessage(FILL_CALENDAR_COMPLETED);
+        count = 1;
+        times = 0;
+        timer = System.currentTimeMillis()-timer;
+        Log.e(TAG,"Fill calendar events cost "+timer/1000+" seconds");
+    }
     public void fillCall(int num) {
         timer = System.currentTimeMillis();
         for (; count <= num; count++) {
@@ -205,6 +237,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 != PackageManager.PERMISSION_GRANTED) {
             Log.e(TAG,"申请通话记录权限");
             permissions.add(Manifest.permission.WRITE_CALL_LOG);
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR)
+                != PackageManager.PERMISSION_GRANTED) {
+            Log.e(TAG,"申请日历权限");
+            permissions.add(Manifest.permission.WRITE_CALENDAR);
         }
         if(permissions.size() > 0) {
             ActivityCompat.requestPermissions(this, permissions.toArray(new String[permissions.size()]), 1);
