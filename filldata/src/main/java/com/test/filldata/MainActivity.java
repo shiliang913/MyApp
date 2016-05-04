@@ -1,17 +1,21 @@
 package com.test.filldata;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.CalendarContract;
 import android.provider.CallLog;
 import android.provider.ContactsContract;
+import android.provider.Telephony;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -170,26 +174,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.e(TAG,"Fill Call logs cost "+timer/1000+" seconds");
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     public void fillSMS(int num){
-        timer = System.currentTimeMillis();
-        uri = Uri.parse("content://sms/");
-        for(;count<=num;count++) {
-            contentValues.clear();
-            contentValues.put("address",1234567);
-            contentValues.put("type",1);
-            contentValues.put("date", System.currentTimeMillis());
-            contentValues.put("body","testmessage"+count);
-            contentResolver.insert(uri, contentValues);
-            if(count%5 == 0) {
-                savedTimes = count;
-                handler.sendEmptyMessage(CURRENT_TIMES);
-            }
+        if (!Telephony.Sms.getDefaultSmsPackage(this).equals(getPackageName())) {
+            Intent intent = new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
+            intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, getPackageName());
+            startActivity(intent);
         }
-        handler.sendEmptyMessage(FILL_SMS_COMPLETED);
-        count = 1;
-        times = 0;
-        timer = System.currentTimeMillis()-timer;
-        Log.e(TAG,"Fill SMS cost "+timer/1000+" seconds");
+        else {
+            timer = System.currentTimeMillis();
+            uri = Uri.parse("content://sms/");
+            for(;count<=num;count++) {
+                contentValues.clear();
+                contentValues.put("address",1234567+count);
+                contentValues.put("type",1);
+                contentValues.put("date", System.currentTimeMillis());
+                contentValues.put("body","testmessage"+count);
+                contentResolver.insert(uri, contentValues);
+                if(count%3 == 0) {
+                    savedTimes = count;
+                    handler.sendEmptyMessage(CURRENT_TIMES);
+                }
+            }
+            handler.sendEmptyMessage(FILL_SMS_COMPLETED);
+            count = 1;
+            times = 0;
+            timer = System.currentTimeMillis()-timer;
+            Log.e(TAG,"Fill SMS cost "+timer/1000+" seconds");
+        }
     }
 
     public void fillContacts(int num){
@@ -228,11 +240,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 != PackageManager.PERMISSION_GRANTED) {
             Log.e(TAG,"申请联系人权限");
             permissions.add(Manifest.permission.WRITE_CONTACTS);
-        }
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS)
-                != PackageManager.PERMISSION_GRANTED) {
-            Log.e(TAG,"申请短信权限");
-            permissions.add(Manifest.permission.READ_SMS);
         }
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALL_LOG)
                 != PackageManager.PERMISSION_GRANTED) {

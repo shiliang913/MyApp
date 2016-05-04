@@ -13,38 +13,43 @@
     <TextView
         android:text="0"
         android:id="@+id/tvProgress"
-        android:textSize="60sp"
+        android:textSize="40sp"
         android:gravity="center"
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-    <EditText
-        android:hint="请输入填充数量"
-        android:gravity="center"
-        android:maxLength="4"
-        android:id="@+id/etIpnut"
-        android:inputType="number"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <Button
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="填充联系人"
-        android:id="@+id/btnContact"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="填充短信"
-        android:id="@+id/btnSMS"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="填充通话记录"
-        android:id="@+id/btnCall"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="填充日历事件"
-        android:id="@+id/btnCalendar"/>
+        android:orientation="vertical">
+        <EditText
+            android:hint="请输入填充数量"
+            android:gravity="bottom|center"
+            android:maxLength="4"
+            android:id="@+id/etIpnut"
+            android:inputType="number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="填充联系人"
+            android:id="@+id/btnContact"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="填充短信"
+            android:id="@+id/btnSMS"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="填充通话记录"
+            android:id="@+id/btnCall"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="填充日历事件"
+            android:id="@+id/btnCalendar"/>
+    </LinearLayout>
 
 </LinearLayout>
