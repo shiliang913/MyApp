@@ -1,9 +1,12 @@
 package com.test.autofill;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Path;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
@@ -19,6 +22,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager; 
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.io.BufferedWriter;
@@ -34,6 +38,7 @@ import java.text.DecimalFormat;
 public class MainActivity extends AppCompatActivity {
 
     Button fill, clear;
+    RadioGroup radioGroup;
     TextView percent;
     EditText editText;
     boolean isFill,isCompleted;
@@ -43,22 +48,26 @@ public class MainActivity extends AppCompatActivity {
     static final int FILL_COMPLETED = 2;
     static final int DELETE_FILE_COMPLETED = 3;
     Handler handler;
+    File fillFile;
     InputMethodManager inputMethodManager;
     static final String TAG = "debug";
     static String fillContent = "";
     long timer;
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         clear = (Button) findViewById(R.id.clear);
+        radioGroup = (RadioGroup) findViewById(R.id.path);
         fill = (Button) findViewById(R.id.fill);
         fill.setBackgroundColor(Color.GREEN);
         clear.setBackgroundColor(Color.RED);
         percent = (TextView) findViewById(R.id.percent);
         editText = (EditText) findViewById(R.id.editText);
         percent.setText(getPercent());
+        final File file[] = getObbDirs();
         inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         for(int i=0;i<100;i++)
             fillContent = fillContent + "这是测试填充的内容";
@@ -96,6 +105,20 @@ public class MainActivity extends AppCompatActivity {
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
         }
+
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                if(i == R.id.internal){
+                    fillFile = new File(file[0],"fill.dat");
+                    Log.e(TAG,"Path is internal storage: "+fillFile.getPath());
+                }
+                else {
+                    fillFile = new File(file[1],"fill.dat");
+                    Log.e(TAG,"Path is SD storage: "+fillFile.getPath());
+                }
+            }
+        });
 
         fill.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,9 +172,8 @@ public class MainActivity extends AppCompatActivity {
                 new Thread() {
                     @Override
                     public void run() {
-                        File file = new File("/sdcard/fill.dat");
                         try {
-                            FileOutputStream fileOutputStream = new FileOutputStream(file,true);
+                            FileOutputStream fileOutputStream = new FileOutputStream(fillFile,true);
                             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
                             BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
                             while(isFill){
@@ -173,13 +195,12 @@ public class MainActivity extends AppCompatActivity {
         clear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final File file = new File("/sdcard/fill.dat");
                 fill.setClickable(false);
                 fill.setBackgroundColor(Color.GRAY);
                 new Thread(){
                     @Override
                     public void run() {
-                        file.delete();
+                        fillFile.delete();
                         isCompleted = false;
                         handler.sendEmptyMessage(DELETE_FILE_COMPLETED);
                     }

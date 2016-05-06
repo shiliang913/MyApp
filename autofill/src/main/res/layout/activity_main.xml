@@ -30,6 +30,7 @@
     <RadioGroup
         android:layout_width="match_parent"
         android:orientation="horizontal"
+        android:id="@+id/path"
         android:layout_height="60sp">
         <RadioButton
             android:layout_weight="1"
