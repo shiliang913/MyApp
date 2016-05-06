@@ -5,13 +5,10 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.Path;
 import android.os.Build;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.StatFs;
-import android.os.storage.StorageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -31,8 +28,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 
 public class MainActivity extends AppCompatActivity {
@@ -209,25 +204,6 @@ public class MainActivity extends AppCompatActivity {
                 }.start();
             }
         });
-    }
-
-    public String getSdPath() {
-        try {
-            Class<?> c = null;
-            Object object = null;
-            StorageManager sm = (StorageManager) getSystemService(STORAGE_SERVICE);
-            Method getVolumePathsMethod = StorageManager.class.getMethod("getVolumePaths", c);
-            String[] paths = (String[]) getVolumePathsMethod.invoke(sm, object);
-            // second element in paths[] is secondary storage path
-            return paths[1];
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     public String getPercent(){
