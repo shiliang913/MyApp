@@ -66,8 +66,9 @@ public class MainActivity extends AppCompatActivity {
         clear.setBackgroundColor(Color.RED);
         percent = (TextView) findViewById(R.id.percent);
         editText = (EditText) findViewById(R.id.editText);
-        percent.setText(getPercent());
         final File file[] = getObbDirs();
+        fillFile = new File(file[0],"fill.dat");
+        percent.setText(getPercent());
         inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         for(int i=0;i<100;i++)
             fillContent = fillContent + "这是测试填充的内容";
@@ -109,14 +110,15 @@ public class MainActivity extends AppCompatActivity {
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                if(i == R.id.internal){
-                    fillFile = new File(file[0],"fill.dat");
-                    Log.e(TAG,"Path is internal storage: "+fillFile.getPath());
-                }
-                else {
+                if(i == R.id.external){
                     fillFile = new File(file[1],"fill.dat");
                     Log.e(TAG,"Path is SD storage: "+fillFile.getPath());
                 }
+                else {
+                    fillFile = new File(file[0],"fill.dat");
+                    Log.e(TAG,"Path is internal storage: "+fillFile.getPath());
+                }
+                percent.setText(getPercent());
             }
         });
 
@@ -235,16 +237,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public long getAvailableInternalMemorySize() {
-        File path = Environment.getDataDirectory();
-        StatFs stat = new StatFs(path.getPath());
+        StatFs stat = new StatFs(fillFile.getParent());
         long blockSize = stat.getBlockSize();
         long availableBlocks = stat.getAvailableBlocks();
         return availableBlocks * blockSize;
     }
 
     public long getTotalInternalMemorySize() {
-        File path = Environment.getDataDirectory();
-        StatFs stat = new StatFs(path.getPath());
+        StatFs stat = new StatFs(fillFile.getParent());
         long blockSize = stat.getBlockSize();
         long totalBlocks = stat.getBlockCount();
         return totalBlocks * blockSize;
