@@ -1,1 +1,1 @@
-include ':autofill', ':autoreboot', ':uiautomator', ':demo', ':batterymonitor', ':filldata'
+include ':autofill', ':autoreboot', ':uiautomator', ':demo', ':batterymonitor', ':filldata', ':autowakeup'
