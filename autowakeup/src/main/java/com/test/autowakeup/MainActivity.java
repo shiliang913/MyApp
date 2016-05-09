@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
 
     Button start, stop;
     TextView status;
+    public static boolean isRun;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.e("debug","启动测试");
+                isRun = true;
                 startService(intent);
             }
         });
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.e("debug","停止测试");
+                isRun = false;
                 stopService(intent);
             }
         });
