@@ -15,9 +15,6 @@ public class MainActivity extends AppCompatActivity {
 
     Button start, stop;
     TextView status;
-    Handler handler = new Handler(){};
-    AlarmManager alarmManager;
-    PendingIntent pendingIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,19 +29,16 @@ public class MainActivity extends AppCompatActivity {
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pendingIntent = PendingIntent.getService(MainActivity.this,0,intent,0);
-                alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis(),10000,pendingIntent);
-                Log.e("debug","alarm已经设置好");
+                Log.e("debug","启动测试");
+                startService(intent);
             }
         });
 
         stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.e("debug","停止测试");
                 stopService(intent);
-                alarmManager.cancel(pendingIntent);
-                Log.e("debug","停止alarm");
             }
         });
     }
