@@ -1,6 +1,7 @@
 package com.test.uiautomator;
 
 import android.app.Instrumentation;
+import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.test.uiautomator.UiDevice;
@@ -14,15 +15,16 @@ public class Demo {
 
     Instrumentation instrumentation;
     UiDevice device;
+    Context context;
 
     @Before
     public void setUp(){
         instrumentation = InstrumentationRegistry.getInstrumentation();
+        context = InstrumentationRegistry.getContext();
         device = UiDevice.getInstance(instrumentation);
     }
 
     @Test
-    public void test1() throws Exception{
-        device.pressRecentApps();
+    public void test() throws Exception{
     }
 }

@@ -8,15 +8,13 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.os.SystemClock;
 import android.util.Log;
-import android.view.WindowManager;
 
 import java.io.IOException;
 
 public class MyService extends Service {
 
-    long interval = 6000;
+    long interval = 5000;
 
     @Override
     public IBinder onBind(Intent intent) {

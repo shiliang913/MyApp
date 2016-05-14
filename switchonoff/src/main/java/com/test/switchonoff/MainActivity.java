@@ -1,7 +1,11 @@
 package com.test.switchonoff;
 
+import android.annotation.TargetApi;
 import android.bluetooth.BluetoothAdapter;
+import android.content.Intent;
 import android.net.wifi.WifiManager;
+import android.os.Build;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -79,10 +83,25 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 running = true;
                 new Thread() {
+                    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
                     @Override
                     public void run() {
-//                        while (running) {
-//                        }
+                        boolean isEnabled = true;
+                        while (running) {
+                            Settings.Global.putInt(getContentResolver(),Settings.Global.AIRPLANE_MODE_ON,isEnabled?1:0);
+                            Intent intent = new Intent(Intent.ACTION_AIRPLANE_MODE_CHANGED);
+                            intent.putExtra("status",isEnabled);
+                            sendBroadcast(intent);
+                            if(isEnabled == true)
+                                isEnabled = false;
+                            else
+                                isEnabled = true;
+                            try {
+                                sleep(3000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
                 }.start();
             }
