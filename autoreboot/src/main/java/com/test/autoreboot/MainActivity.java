@@ -1,9 +1,11 @@
 package com.test.autoreboot;
 
+import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Message;
+import android.os.PowerManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -36,11 +38,9 @@ public class MainActivity extends AppCompatActivity {
         final android.os.Handler handler = new android.os.Handler() {
             @Override
             public void handleMessage(Message msg) {
-                try {
-                    if (isReboot)
-                        Runtime.getRuntime().exec("reboot");
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if (isReboot) {
+                    PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+                    powerManager.reboot(null);
                 }
             }
         };
@@ -69,6 +69,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             }.start();
         }
+
+        KeyguardManager keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
+        KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("TAG");
+        keyguardLock.disableKeyguard();
 
         start.setOnClickListener(new View.OnClickListener() {
             @Override

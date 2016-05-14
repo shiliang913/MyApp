@@ -1,8 +1,6 @@
 package com.test.switchonoff;
 
 import android.bluetooth.BluetoothAdapter;
-import android.content.ComponentName;
-import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -42,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
                             else
                                 wifiManager.setWifiEnabled(true);
                             try {
-                                Thread.sleep(3000);
+                                sleep(3000);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
@@ -66,10 +64,38 @@ public class MainActivity extends AppCompatActivity {
                             else
                                 bluetoothAdapter.enable();
                             try {
-                                Thread.sleep(3000);
+                                sleep(3000);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
+                        }
+                    }
+                }.start();
+            }
+        });
+
+        flight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                running = true;
+                new Thread() {
+                    @Override
+                    public void run() {
+//                        while (running) {
+//                        }
+                    }
+                }.start();
+            }
+        });
+
+        gps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                running = true;
+                new Thread() {
+                    @Override
+                    public void run() {
+                        while (running) {
                         }
                     }
                 }.start();

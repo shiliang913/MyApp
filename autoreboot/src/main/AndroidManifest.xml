@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.test.autoreboot">
-    <!--android:sharedUserId="android.uid.shell">-->
+    package="com.test.autoreboot"
+    android:sharedUserId="android.uid.shell">
 
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.REBOOT"/>
 
     <application
         android:allowBackup="true"
